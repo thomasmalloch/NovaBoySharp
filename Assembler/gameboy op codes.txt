@@ -1,0 +1,113 @@
+Conventions in instruction source:
+    D   = Destination register (8 bit)
+    S   = Source register (8 bit)
+    RP  = Register pair (16 bit)
+    #   = 8 or 16 bit immediate operand
+    a   = 16 bit Memory address
+    p   = 8 bit port address
+    ccc = Conditional
+	
+Dest and Source reg fields:
+    111=A   (Accumulator)
+    000=B
+    001=C
+    010=D
+    011=E
+    100=H
+    101=L
+    110=M   (Memory reference through address in H:L)
+
+Register pair 'RP' fields:
+    00=BC   (B:C as 16 bit register)
+    01=DE   (D:E as 16 bit register)
+    10=HL   (H:L as 16 bit register)
+    11=SP   (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
+
+Instrction		Encoding	Flags		Description
+-------------------------------------------------------------------------------
+JR flag,r8		001X X000	-			Conditional jump to address relative to current position
+LD RP,d16		00XX 0001	-			Load register pair with 16bit number
+LD RP,A			00XX 0010	-			Load register pair with accumulator
+INC RP			00XX 0011	-			Increment register pair
+INC R			00XX X100	Z 0 H -		Increment register
+DEC RP			00XX 1011	-			Decrement register pair
+DEC R			00XX X101	Z 1 H -		Decrement register
+LD R,d8			00XX X110	-			Load register with 8bit number
+LD A,RP			00XX 1010	-			Load accumulator with register pair
+ADD HL,RP		00XX 1001	- 0 H C		Add HL with register pair
+LD r1,r2		01XX XYYY	-			Load register1 with register2
+ADD A,R			1000 0XXX	Z 0 H C		Add register to accumulator
+ADC A,R			1000 1XXX	Z 0 H C		Add register + carry to accumulator
+SUB A,R			1001 0XXX	Z 1 H C		Subtract register from accumulator
+SBC A,R			1001 1XXX	Z 1 H C		Subtract register + carry from accumulator
+AND R			1010 0XXX	Z 0 1 0		And register
+XOR R			1010 1XXX	Z 0 0 0		XOR register
+OR R			1011 0XXX	Z 0 0 0		OR register
+CP R			1011 1XXX	Z 1 H C		Compare register
+RET flag		110X X000	-			Conditional return (pop two bytes from stack & jump to address)
+POP RP			11XX 0001	-			pop two bytes from stack and save to register pair
+PUSH RP			11XX 0101	-			push register pair to stack
+JP flag			110X X010	-			Conditional Jump to address
+CALL flag		110X X100	-			Conditional call (push address of next instruction onto stack and then jump to address)
+RST	address		11XX X111	-			Push present address onto stack, jump to address
+
+NOP				0000 0000	-			No Operation
+STOP			0001 0000	-			Halt CPU & Display until button is pressed
+HALT			0111 0110	-			Power down CPU until an interrupt occurs
+RLCA			0000 0111
+RLA				0001 0111
+RRCA			0000 1111
+RRA				0001 1111
+DDA				0011 0111
+SCF				0100 0111
+CPL				0011 1111
+CCF				0100 1111
+RET				1100 1000
+RETI			1101 1000
+CALL a16		1100 1101	
+LDH a8,A		1110 0000
+LDH A,a8		1111 0000
+LD C,A			1110 0011
+LD A,C			1111 0011
+ADD A,d8		1100 0110
+SUB A,d8		1101 0110
+AND A,d8		1110 0110
+OR A,d8			1111 0110
+ADC A,d8		1100 1110
+SBC A,d8		1101 1110
+XOR d8			1110 1110
+CP d8			1111 1110
+ADD SP,r8		1110 1000
+PREFIX CB		1100 1011
+LD HL,sp+r8		1111 1000	
+LD a16,A		1110 1010
+LD A,a16		1111 1010
+EI				1111 1011
+DI				1111 0011
+LD HL,SP+r8		1111 1000
+LD SP,HL		1111 1001	
+JP a16			1100 0011	-			Jump to address
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
